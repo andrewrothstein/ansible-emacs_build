@@ -1,0 +1,3 @@
+---
+emacs_build_os_pkgs:
+  - ncurses
