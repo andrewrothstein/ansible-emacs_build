@@ -1,7 +1,8 @@
 ---
 # vars file for emacs
-emacs_name : emacs-{{emacs_build_ver}}
-emacs_build_tgz : '{{emacs_name}}.tar.gz'
-emacs_build_url : '{{emacs_build_mirror}}/{{emacs_build_tgz}}'
+emacs_name: emacs-{{ emacs_build_ver }}
+emacs_build_tgz: '{{ emacs_name }}.tar.gz'
+emacs_build_tmp_tgz: '{{ emacs_build_tmp_dir | default("/tmp") }}/{{ emacs_build_tgz }}'
+emacs_build_url: '{{ emacs_build_mirror }}/{{ emacs_build_tgz }}'
 
-emacs_build_src_dir: '{{emacs_build_parent_src_dir}}/{{emacs_name}}'
+emacs_build_src_dir: '{{ emacs_build_parent_src_dir }}/{{ emacs_name }}'

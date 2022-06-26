@@ -1,68 +1,70 @@
 ---
 - name: resolve platform specific vars
-  include_vars: '{{item}}'
+  include_vars: '{{ item }}'
   with_first_found:
     - files:
-        - '{{ansible_distribution}}-{{ansible_distribution_release}}.yml'
-        - '{{ansible_distribution}}.yml'
-        - '{{ansible_os_family}}.yml'
+        - '{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - '{{ ansible_distribution }}.yml'
+        - '{{ ansible_os_family }}.yml'
       skip: true
       paths:
-        - '{{role_path}}/vars'
+        - '{{ role_path }}/vars'
 
 - name: os pkgs....
-  become: yes
+  become: true
   become_user: root
-  with_items: '{{emacs_build_os_pkgs|default([])}}'
+  with_items: '{{ emacs_build_os_pkgs | default([]) }}'
   package:
-    name: '{{item}}'
+    name: '{{ item }}'
     state: present
   
 - name: downloading...
-  become: yes
+  become: true
   become_user: root
   get_url:
-    url: '{{emacs_build_url}}'
-    dest: /tmp/{{emacs_build_tgz}}
-    timeout: '{{emacs_build_timeout_seconds}}'
+    url: '{{ emacs_build_url }}'
+    dest: '{{ emacs_build_tmp_tgz }}'
+    timeout: '{{ emacs_build_timeout_seconds }}'
     mode: 0644
 
 - name: unarchiving...
-  become: yes
+  become: true
   become_user: root
   unarchive:
-    remote_src: yes
-    src: /tmp/{{emacs_build_tgz}}
-    dest: '{{emacs_build_parent_src_dir}}'
-    creates: '{{emacs_build_src_dir}}'
+    remote_src: true
+    src: '{{ emacs_build_tmp_tgz }}'
+    dest: '{{ emacs_build_parent_src_dir }}'
+    creates: '{{ emacs_build_src_dir }}'
 
 - name: configuring...
-  become: yes
+  become: true
   become_user: root
-  command: ./configure --with-x=no
+  command: configure --with-x=no
   args:
-    chdir: '{{emacs_build_src_dir}}'
-    creates: '{{emacs_build_src_dir}}/Makefile'
+    chdir: '{{ emacs_build_src_dir }}'
+    creates: '{{ emacs_build_src_dir }}/Makefile'
 
 - name: building...
-  become: yes
+  become: true
   become_user: root
   command: make
   args:
-    chdir: '{{emacs_build_src_dir}}'
-    creates: '{{emacs_build_src_dir}}/src/emacs'
+    chdir: '{{ emacs_build_src_dir }}'
+    creates: '{{ emacs_build_src_dir }}/src/emacs'
 
 - name: installing...
-  become: yes
+  become: true
   become_user: root
   command: make install
   args:
-    chdir: '{{emacs_build_src_dir}}'
+    chdir: '{{ emacs_build_src_dir }}'
     creates: /usr/local/bin/emacs
 
 - name: cleanup...
-  become: yes
+  become: true
   become_user: root
   file:
-    path: '{{emacs_build_src_dir}}'
+    path:
+      - '{{ emacs_build_src_dir }}'
+      - '{{ emacs_build_tmp_tgz }}'
     state: absent

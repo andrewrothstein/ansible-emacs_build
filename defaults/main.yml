@@ -1,7 +1,7 @@
 ---
 # defaults file for emacs
-emacs_build_ver : '25.3'
-emacs_build_mirror : http://ftp.gnu.org/gnu/emacs
-emacs_build_timeout_seconds : 600
+emacs_build_ver: '28.1'
+emacs_build_mirror: http://ftp.gnu.org/gnu/emacs
+emacs_build_timeout_seconds: 600
 
 emacs_build_parent_src_dir: /usr/local
