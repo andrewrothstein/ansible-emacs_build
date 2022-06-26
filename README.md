@@ -1,6 +1,6 @@
 andrewrothstein.emacs-build
 =========
-[![Build Status](https://travis-ci.org/andrewrothstein/ansible-emacs-build.svg?branch=master)](https://travis-ci.org/andrewrothstein/ansible-emacs-build)
+![Build Status](https://github.com/andrewrothstein/ansible-emacs-build/actions/workflows/build.yml/badge.svg)
 
 A role to build [Emacs](https://www.gnu.org/software/emacs/)
 
@@ -25,7 +25,7 @@ Example Playbook
 ```yml
 - hosts: servers
   roles:
-    - andrewrothstein.emacs-builder
+    - andrewrothstein.emacs-build
 ```
 
 License
