@@ -1,5 +1,11 @@
 ---
-- name: resolve platform specific vars
+- name: Installing andrewrothstein.unarchivedeps
+  ansible.builtin.include_role:
+    name: andrewrothstein.unarchivedeps
+- name: Installing andrewrothstein.gcc_toolbox
+  ansible.builtin.include_role:
+    name: andrewrothstein.gcc_toolbox
+- name: Resolve platform specific vars
   include_vars: '{{ item }}'
   with_first_found:
     - files:
@@ -9,61 +15,59 @@
       skip: true
       paths:
         - '{{ role_path }}/vars'
-
-- name: os pkgs....
+- name: Installing OS pkgs....
   become: true
   become_user: root
-  with_items: '{{ emacs_build_os_pkgs | default([]) }}'
-  package:
-    name: '{{ item }}'
+  ansible.builtin.package:
+    name: '{{ emacs_build_os_pkgs | default([]) }}'
     state: present
 
-- name: downloading...
+- name: Downloading {{ emacs_build_url }}
   become: true
   become_user: root
-  get_url:
+  ansible.builtin.get_url:
     url: '{{ emacs_build_url }}'
     dest: '{{ emacs_build_tmp_tgz }}'
     timeout: '{{ emacs_build_timeout_seconds }}'
-    mode: 0644
+    mode: '644'
 
-- name: unarchiving...
+- name: Unarchiving {{ emacs_build_tmp_tgz }}
   become: true
   become_user: root
-  unarchive:
+  ansible.builtin.unarchive:
     remote_src: true
     src: '{{ emacs_build_tmp_tgz }}'
     dest: '{{ emacs_build_parent_src_dir }}'
     creates: '{{ emacs_build_src_dir }}'
 
-- name: configuring...
+- name: Configuring...
   become: true
   become_user: root
-  command: '{{ emacs_build_src_dir }}/configure --with-x=no'
+  ansible.builtin.command: '{{ emacs_build_src_dir }}/configure --with-x=no'
   args:
     chdir: '{{ emacs_build_src_dir }}'
     creates: '{{ emacs_build_src_dir }}/Makefile'
 
-- name: building...
+- name: Building...
   become: true
   become_user: root
-  command: make
+  ansible.builtin.command: make
   args:
     chdir: '{{ emacs_build_src_dir }}'
     creates: '{{ emacs_build_src_dir }}/src/emacs'
 
-- name: installing...
+- name: Installing...
   become: true
   become_user: root
-  command: make install
+  ansible.builtin.command: make install
   args:
     chdir: '{{ emacs_build_src_dir }}'
     creates: /usr/local/bin/emacs
 
-- name: cleanup...
+- name: Cleanup...
   become: true
   become_user: root
-  file:
+  ansible.builtin.file:
     path:
       - '{{ emacs_build_src_dir }}'
       - '{{ emacs_build_tmp_tgz }}'

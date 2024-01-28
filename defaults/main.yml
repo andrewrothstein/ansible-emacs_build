@@ -1,6 +1,6 @@
 ---
 # defaults file for emacs
-emacs_build_ver: '28.1'
+emacs_build_ver: '29.2'
 emacs_build_mirror: http://ftp.gnu.org/gnu/emacs
 emacs_build_timeout_seconds: 600
 
