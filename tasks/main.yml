@@ -44,7 +44,10 @@
 - name: Configuring...
   become: true
   become_user: root
-  ansible.builtin.command: '{{ emacs_build_src_dir }}/configure --with-x=no'
+  ansible.builtin.command: >-
+    {{- emacs_build_src_dir }}/configure
+    --with-x=no
+    --with-gnutls=ifavailable
   args:
     chdir: '{{ emacs_build_src_dir }}'
     creates: '{{ emacs_build_src_dir }}/Makefile'
