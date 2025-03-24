@@ -29,6 +29,7 @@
     url: '{{ emacs_build_url }}'
     dest: '{{ emacs_build_tmp_tgz }}'
     timeout: '{{ emacs_build_timeout_seconds }}'
+    checksum: '{{ emacs_build_checksum }}'
     mode: '644'
 
 - name: Unarchiving {{ emacs_build_tmp_tgz }}
